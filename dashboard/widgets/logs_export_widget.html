@@ -1,0 +1,42 @@
+<div class="tb-logs-root">
+  <div class="tb-logs-toolbar">
+    <div class="tb-logs-title">
+      <h3>Nhật Ký Hệ Thống IoT (5 Trường)</h3>
+      <span id="tbRowCount" class="tb-badge">0 bản ghi</span>
+    </div>
+    <div class="tb-logs-controls">
+      <select id="tbDeviceFilter" aria-label="Lọc theo thiết bị">
+        <option value="">Tất cả thiết bị</option>
+      </select>
+      <select id="tbKeyFilter" aria-label="Lọc theo tên giá trị">
+        <option value="">Tất cả giá trị</option>
+      </select>
+      <input
+        id="tbSearchFilter"
+        type="text"
+        placeholder="Tìm ID, thiết bị, giá trị, thời gian..."
+      />
+      <button id="tbResetBtn" type="button" class="tb-btn tb-btn-ghost">Xóa lọc</button>
+      <button id="tbCsvBtn" type="button" class="tb-btn tb-btn-primary">Xuất CSV</button>
+      <button id="tbXlsBtn" type="button" class="tb-btn tb-btn-excel">Xuất Excel (.xls)</button>
+    </div>
+  </div>
+  <div class="tb-table-wrap">
+    <table class="tb-logs-table">
+      <thead>
+        <tr>
+          <th>ID thiết bị</th>
+          <th>Tên thiết bị</th>
+          <th>Tên giá trị</th>
+          <th>Giá trị cảm biến</th>
+          <th>Thời gian nhận dữ liệu</th>
+        </tr>
+      </thead>
+      <tbody id="tbLogsBody">
+        <tr>
+          <td colspan="5" class="tb-empty">Đang chờ dữ liệu telemetry từ thiết bị...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
