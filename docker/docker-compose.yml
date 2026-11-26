@@ -1,0 +1,18 @@
+services:
+  thingsboard:
+    image: thingsboard/tb-postgres:3.8.1
+    container_name: uit-lab04-thingsboard
+    restart: unless-stopped
+    ports:
+      - "8080:9090"
+      - "1883:1883"
+    environment:
+      TB_QUEUE_TYPE: in-memory
+      JAVA_OPTS: "-Xms512M -Xmx1536M"
+    volumes:
+      - tb-postgres-data:/data
+      - tb-log-data:/var/log/thingsboard
+
+volumes:
+  tb-postgres-data:
+  tb-log-data:
