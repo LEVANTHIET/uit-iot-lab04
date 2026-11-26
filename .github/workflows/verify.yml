@@ -1,0 +1,21 @@
+﻿name: Trust Pyramid Verification (Production Parity)
+
+on:
+  push:
+    branches: [ master, main, "**" ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Deterministic Verification
+        shell: pwsh
+        run: |
+          if (Test-Path "./verify.ps1") {
+            ./verify.ps1
+          }
