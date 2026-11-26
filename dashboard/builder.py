@@ -20,11 +20,11 @@ CUSTOM_WIDGET_ALIAS = "uit_lab04_system_logs_export"
 DASHBOARD_TITLE = "UIT Lab 04 - Giám Sát & Điều Khiển Hệ Thống IoT (2x ESP32)"
 
 DEFAULT_WIDGET_FQNS: dict[str, str] = {
-    "entities_table": "system.entity_widgets.entities_table",
-    "value_card": "system.cards.simple_card",
+    "entities_table": "system.cards.entities_table",
+    "value_card": "system.cards.value_card",
     "switch_control": "system.control_widgets.switch_control",
     "line_chart": "system.charts.basic_timeseries",
-    "logs_custom": f"{BUNDLE_ALIAS}.{CUSTOM_WIDGET_ALIAS}",
+    "logs_custom": f"tenant.{CUSTOM_WIDGET_ALIAS}",
 }
 
 
@@ -57,7 +57,10 @@ def build_custom_widget_payload(bundle_alias: str = BUNDLE_ALIAS) -> dict[str, A
         "defaultConfig": json.dumps(
             {
                 "datasources": [],
-                "timewindow": {"realtime": {"timewindowMs": 900000}},
+                "timewindow": {
+                    "realtime": {"realtimeType": 0, "interval": 1000, "timewindowMs": 900000},
+                    "aggregation": {"type": "NONE", "limit": 500},
+                },
                 "showTitle": False,
                 "title": "Nhật ký hệ thống",
             },
@@ -65,16 +68,25 @@ def build_custom_widget_payload(bundle_alias: str = BUNDLE_ALIAS) -> dict[str, A
         ),
     }
     return {
-        "fqn": f"{bundle_alias}.{CUSTOM_WIDGET_ALIAS}",
+        "fqn": CUSTOM_WIDGET_ALIAS,
         "name": "UIT Lab 04 System Logs & CSV/Excel Export",
         "deprecated": False,
         "descriptor": descriptor,
     }
 
 
+def _normalize_system_fqn(item: dict[str, Any]) -> str:
+    """Chuẩn hóa FQN hệ thống với tiền tố system. theo chuẩn Dashboard TB 3.8."""
+    fqn = str(item.get("fqn", ""))
+    tenant_id = str((item.get("tenantId") or {}).get("id", ""))
+    if tenant_id == "13814000-1dd2-11b2-8080-808080808080" and not fqn.startswith("system."):
+        return f"system.{fqn}"
+    return fqn
+
+
 def _find_matching_fqn(infos: list[dict[str, Any]], candidates: tuple[str, ...]) -> str | None:
-    """Tìm FQN widget khớp nhất từ danh sách widgetTypesInfos của ThingsBoard."""
-    fqns = [str(item.get("fqn", "")) for item in infos if item.get("fqn")]
+    """Tìm FQN widget khớp nhất từ danh sách widgetTypes của ThingsBoard."""
+    fqns = [_normalize_system_fqn(item) for item in infos if item.get("fqn")]
     for candidate in candidates:
         for fqn in fqns:
             if fqn == candidate or fqn.endswith(f".{candidate}"):
@@ -86,10 +98,10 @@ def resolve_widget_fqns(widget_infos: list[dict[str, Any]]) -> dict[str, str]:
     """Ánh xạ các widget gốc đang có sẵn trên phiên bản ThingsBoard thực tế."""
     resolved = dict(DEFAULT_WIDGET_FQNS)
     candidates_map: dict[str, tuple[str, ...]] = {
-        "entities_table": ("system.entity_widgets.entities_table", "entities_table"),
-        "value_card": ("system.cards.simple_card", "system.cards.value_card", "value_card", "simple_card"),
-        "switch_control": ("system.control_widgets.switch_control", "switch_control", "rpc_button"),
-        "line_chart": ("system.charts.basic_timeseries", "system.charts.timeseries_line_chart", "basic_timeseries"),
+        "entities_table": ("system.cards.entities_table", "cards.entities_table", "entities_table"),
+        "value_card": ("system.cards.value_card", "cards.value_card", "system.cards.simple_card"),
+        "switch_control": ("system.control_widgets.switch_control", "control_widgets.switch_control"),
+        "line_chart": ("system.charts.basic_timeseries", "charts.basic_timeseries"),
     }
     for key, candidates in candidates_map.items():
         match = _find_matching_fqn(widget_infos, candidates)
@@ -127,16 +139,16 @@ def _build_entity_aliases(node1_id: str, node2_id: str) -> dict[str, Any]:
 def _build_layout_positions() -> dict[str, dict[str, int]]:
     """Định vị lưới 24 cột cho toàn bộ widget trên Dashboard."""
     return {
-        "w_devices": {"col": 0, "row": 0, "sizeX": 24, "sizeY": 4},
-        "w_temp_card": {"col": 0, "row": 4, "sizeX": 4, "sizeY": 3},
-        "w_humid_card": {"col": 4, "row": 4, "sizeX": 4, "sizeY": 3},
-        "w_lux_card": {"col": 8, "row": 4, "sizeX": 4, "sizeY": 3},
-        "w_led1_rpc": {"col": 12, "row": 4, "sizeX": 6, "sizeY": 3},
-        "w_led2_rpc": {"col": 18, "row": 4, "sizeX": 6, "sizeY": 3},
-        "w_chart_temp": {"col": 0, "row": 7, "sizeX": 8, "sizeY": 5},
-        "w_chart_humid": {"col": 8, "row": 7, "sizeX": 8, "sizeY": 5},
-        "w_chart_lux": {"col": 16, "row": 7, "sizeX": 8, "sizeY": 5},
-        "w_logs_table": {"col": 0, "row": 12, "sizeX": 24, "sizeY": 7},
+        "w_devices": {"col": 0, "row": 0, "sizeX": 24, "sizeY": 5},
+        "w_temp_card": {"col": 0, "row": 5, "sizeX": 4, "sizeY": 3},
+        "w_humid_card": {"col": 4, "row": 5, "sizeX": 4, "sizeY": 3},
+        "w_lux_card": {"col": 8, "row": 5, "sizeX": 4, "sizeY": 3},
+        "w_led1_rpc": {"col": 12, "row": 5, "sizeX": 6, "sizeY": 3},
+        "w_led2_rpc": {"col": 18, "row": 5, "sizeX": 6, "sizeY": 3},
+        "w_chart_temp": {"col": 0, "row": 8, "sizeX": 8, "sizeY": 5},
+        "w_chart_humid": {"col": 8, "row": 8, "sizeX": 8, "sizeY": 5},
+        "w_chart_lux": {"col": 16, "row": 8, "sizeX": 8, "sizeY": 5},
+        "w_logs_table": {"col": 0, "row": 13, "sizeX": 24, "sizeY": 7},
     }
 
 
@@ -149,9 +161,9 @@ def build_dashboard_payload(
     fqns = widget_fqns or DEFAULT_WIDGET_FQNS
     widgets = {
         "w_devices": make_entities_table_widget("w_devices", "alias_all_devices", fqns["entities_table"]),
-        "w_temp_card": make_value_card_widget("w_temp_card", "alias_node2", "Nhiệt độ", "temperature", "°C", "#ef4444", fqns["value_card"]),
-        "w_humid_card": make_value_card_widget("w_humid_card", "alias_node2", "Độ ẩm", "humidity", "%", "#3b82f6", fqns["value_card"]),
-        "w_lux_card": make_value_card_widget("w_lux_card", "alias_node1", "Ánh sáng", "illuminance", "lx", "#f59e0b", fqns["value_card"]),
+        "w_temp_card": make_value_card_widget("w_temp_card", "alias_node2", "Nhiệt độ", "temperature", "°C", "#ef4444", fqns["value_card"], icon="thermostat"),
+        "w_humid_card": make_value_card_widget("w_humid_card", "alias_node2", "Độ ẩm", "humidity", "%", "#3b82f6", fqns["value_card"], icon="water_drop"),
+        "w_lux_card": make_value_card_widget("w_lux_card", "alias_node1", "Ánh sáng", "illuminance", "lx", "#f59e0b", fqns["value_card"], icon="light_mode"),
         "w_led1_rpc": make_led_switch_widget("w_led1_rpc", "alias_node1", "Điều khiển LED 1 (GPIO 18)", 1, fqns["switch_control"]),
         "w_led2_rpc": make_led_switch_widget("w_led2_rpc", "alias_node1", "Điều khiển LED 2 (GPIO 19)", 2, fqns["switch_control"]),
         "w_chart_temp": make_line_chart_widget("w_chart_temp", "alias_node2", "Biểu đồ Nhiệt độ", "temperature", "Nhiệt độ", "°C", "#ef4444", fqns["line_chart"]),
@@ -167,8 +179,24 @@ def build_dashboard_payload(
             "entityAliases": _build_entity_aliases(node1_id, node2_id),
             "timewindow": {
                 "displayValue": "",
+                "hideInterval": False,
+                "hideAggregation": False,
+                "hideAggInterval": False,
+                "hideTimezone": False,
                 "selectedTab": 0,
-                "realtime": {"realtimeType": 0, "interval": 1000, "timewindowMs": 900000},
+                "realtime": {
+                    "realtimeType": 0,
+                    "interval": 1000,
+                    "timewindowMs": 900000,
+                    "quickInterval": "CURRENT_DAY",
+                },
+                "history": {
+                    "historyType": 0,
+                    "interval": 1000,
+                    "timewindowMs": 60000,
+                    "fixedTimewindow": {"startTimeMs": 1700000000000, "endTimeMs": 1700003600000},
+                },
+                "aggregation": {"type": "NONE", "limit": 500},
             },
             "states": {
                 "default": {

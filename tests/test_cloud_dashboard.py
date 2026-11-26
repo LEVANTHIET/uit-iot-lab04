@@ -45,7 +45,18 @@ class TestDashboardBuilder(unittest.TestCase):
         """Xác nhận Dashboard đủ 2 ESP32, 3 cảm biến, 2 LED RPC và Logs 5 cột."""
         dash = build_dashboard_payload("uuid-1", "uuid-2")
         serialized = json.dumps(dash, ensure_ascii=False)
-        for token in ("uuid-1", "uuid-2", "temperature", "humidity", "illuminance", "setLed1", "setLed2"):
+        for token in (
+            "uuid-1",
+            "uuid-2",
+            "temperature",
+            "humidity",
+            "illuminance",
+            "setLed1",
+            "setLed2",
+            "tenant.uit_lab04_system_logs_export",
+            "valueFont",
+            "aggregation",
+        ):
             self.assertIn(token, serialized)
 
     def test_custom_widget_contains_five_columns_and_export(self) -> None:
@@ -62,12 +73,12 @@ class TestDashboardBuilder(unittest.TestCase):
     def test_resolve_widget_fqns_adapts_live_catalog(self) -> None:
         """Xác nhận hàm đối chiếu FQN nhận diện đúng tên widget từ server."""
         catalog = [
-            {"fqn": "system.cards.value_card"},
-            {"fqn": "system.charts.timeseries_line_chart"},
+            {"fqn": "cards.value_card", "tenantId": {"id": "13814000-1dd2-11b2-8080-808080808080"}},
+            {"fqn": "charts.basic_timeseries", "tenantId": {"id": "13814000-1dd2-11b2-8080-808080808080"}},
         ]
         resolved = resolve_widget_fqns(catalog)
         self.assertEqual(resolved["value_card"], "system.cards.value_card")
-        self.assertEqual(resolved["line_chart"], "system.charts.timeseries_line_chart")
+        self.assertEqual(resolved["line_chart"], "system.charts.basic_timeseries")
 
 
 class TestCloudProvisionAndExport(unittest.TestCase):
@@ -77,7 +88,6 @@ class TestCloudProvisionAndExport(unittest.TestCase):
         """Mô phỏng trọn vẹn luồng đăng nhập, tạo thiết bị, nạp Dashboard và xuất CSV."""
         session = MagicMock()
         session.get.side_effect = [
-            _FakeResponse(404, None),
             _FakeResponse(404, None),
             _FakeResponse(404, None),
             _FakeResponse(200, {"id": {"id": "id-node1"}, "name": "ESP32-Node1-Light-LED"}),
@@ -92,7 +102,9 @@ class TestCloudProvisionAndExport(unittest.TestCase):
             _FakeResponse(200, {"credentialsId": "ESP32_NODE2_TOKEN"}),
             _FakeResponse(200, []),
             _FakeResponse(200, {"id": {"id": "bundle-1"}}),
-            _FakeResponse(200, {"id": {"id": "wtype-1"}}),
+            _FakeResponse(200, {"data": []}),
+            _FakeResponse(200, {"id": {"id": "wtype-1"}, "fqn": "uit_lab04_system_logs_export"}),
+            _FakeResponse(200, None),
             _FakeResponse(200, {"data": []}),
             _FakeResponse(200, {"data": []}),
             _FakeResponse(200, {"id": {"id": "dash-1"}}),

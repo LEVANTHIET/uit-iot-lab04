@@ -48,13 +48,19 @@ def provision_all(
 
     bundle_payload = build_widget_bundle_payload()
     widget_payload = build_custom_widget_payload()
-    client.ensure_widgets_bundle(bundle_payload)
+    bundle = client.ensure_widgets_bundle(bundle_payload)
     saved_widget = client.ensure_widget_type(widget_payload)
+    if bundle.get("id") and saved_widget.get("id"):
+        client.link_widget_types_to_bundle(
+            str(bundle["id"]["id"]),
+            [str(saved_widget["id"]["id"])],
+        )
 
     widget_infos = client.list_widget_types()
     fqns = resolve_widget_fqns(widget_infos)
     if saved_widget and saved_widget.get("fqn"):
-        fqns["logs_custom"] = str(saved_widget["fqn"])
+        raw_fqn = str(saved_widget["fqn"])
+        fqns["logs_custom"] = raw_fqn if "." in raw_fqn else f"tenant.{raw_fqn}"
     dash_payload = build_dashboard_payload(node1_id, node2_id, widget_fqns=fqns)
     saved_dash = client.ensure_dashboard(dash_payload)
 

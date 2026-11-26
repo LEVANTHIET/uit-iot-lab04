@@ -5,15 +5,16 @@
     "widgets": {
       "w_devices": {
         "id": "w_devices",
-        "typeFullFqn": "system.entity_widgets.entities_table",
+        "typeFullFqn": "system.cards.entities_table",
         "type": "latest",
-        "sizeX": 12,
-        "sizeY": 4,
+        "sizeX": 24,
+        "sizeY": 5,
         "row": 0,
         "col": 0,
         "config": {
           "title": "Trạng Thái Kết Nối Thiết Bị (ESP32)",
           "showTitle": true,
+          "useDashboardTimewindow": false,
           "datasources": [
             {
               "type": "entity",
@@ -53,20 +54,27 @@
                   "color": "#2196f3",
                   "units": "",
                   "decimals": 2,
-                  "settings": {}
+                  "settings": {
+                    "useCellContentFunction": true,
+                    "cellContentFunction": "return value ? new Date(Number(value)).toLocaleString('vi-VN') : '-';"
+                  }
                 }
               ]
             }
           ],
           "settings": {
+            "entitiesTitle": "Trạng Thái Kết Nối Thiết Bị (ESP32)",
+            "displayEntityName": false,
+            "displayEntityType": false,
             "enableSearch": true,
-            "displayPagination": false
+            "displayPagination": false,
+            "enableStickyHeader": true
           }
         }
       },
       "w_temp_card": {
         "id": "w_temp_card",
-        "typeFullFqn": "system.cards.simple_card",
+        "typeFullFqn": "system.cards.value_card",
         "type": "latest",
         "sizeX": 4,
         "sizeY": 3,
@@ -74,7 +82,8 @@
         "col": 0,
         "config": {
           "title": "Nhiệt độ",
-          "showTitle": true,
+          "showTitle": false,
+          "useDashboardTimewindow": true,
           "units": "°C",
           "decimals": 2,
           "datasources": [
@@ -95,14 +104,67 @@
             }
           ],
           "settings": {
+            "layout": "square",
+            "showLabel": true,
             "labelPosition": "top",
-            "layout": "left"
+            "labelFont": {
+              "family": "Roboto",
+              "size": 15,
+              "sizeUnit": "px",
+              "weight": "500"
+            },
+            "labelColor": {
+              "type": "constant",
+              "color": "rgba(0, 0, 0, 0.75)"
+            },
+            "showIcon": true,
+            "icon": "thermostat",
+            "iconSize": 34,
+            "iconSizeUnit": "px",
+            "iconColor": {
+              "type": "constant",
+              "color": "#ef4444"
+            },
+            "valueFont": {
+              "family": "Roboto",
+              "size": 36,
+              "sizeUnit": "px",
+              "weight": "600"
+            },
+            "valueColor": {
+              "type": "constant",
+              "color": "#111827"
+            },
+            "showDate": true,
+            "dateFormat": {
+              "lastUpdateAgo": true,
+              "custom": false
+            },
+            "dateFont": {
+              "family": "Roboto",
+              "size": 12,
+              "sizeUnit": "px",
+              "weight": "400"
+            },
+            "dateColor": {
+              "type": "constant",
+              "color": "rgba(0, 0, 0, 0.45)"
+            },
+            "background": {
+              "type": "color",
+              "color": "#ffffff",
+              "overlay": {
+                "enabled": false,
+                "color": "rgba(255,255,255,0.72)",
+                "blur": 3
+              }
+            }
           }
         }
       },
       "w_humid_card": {
         "id": "w_humid_card",
-        "typeFullFqn": "system.cards.simple_card",
+        "typeFullFqn": "system.cards.value_card",
         "type": "latest",
         "sizeX": 4,
         "sizeY": 3,
@@ -110,7 +172,8 @@
         "col": 0,
         "config": {
           "title": "Độ ẩm",
-          "showTitle": true,
+          "showTitle": false,
+          "useDashboardTimewindow": true,
           "units": "%",
           "decimals": 2,
           "datasources": [
@@ -131,14 +194,67 @@
             }
           ],
           "settings": {
+            "layout": "square",
+            "showLabel": true,
             "labelPosition": "top",
-            "layout": "left"
+            "labelFont": {
+              "family": "Roboto",
+              "size": 15,
+              "sizeUnit": "px",
+              "weight": "500"
+            },
+            "labelColor": {
+              "type": "constant",
+              "color": "rgba(0, 0, 0, 0.75)"
+            },
+            "showIcon": true,
+            "icon": "water_drop",
+            "iconSize": 34,
+            "iconSizeUnit": "px",
+            "iconColor": {
+              "type": "constant",
+              "color": "#3b82f6"
+            },
+            "valueFont": {
+              "family": "Roboto",
+              "size": 36,
+              "sizeUnit": "px",
+              "weight": "600"
+            },
+            "valueColor": {
+              "type": "constant",
+              "color": "#111827"
+            },
+            "showDate": true,
+            "dateFormat": {
+              "lastUpdateAgo": true,
+              "custom": false
+            },
+            "dateFont": {
+              "family": "Roboto",
+              "size": 12,
+              "sizeUnit": "px",
+              "weight": "400"
+            },
+            "dateColor": {
+              "type": "constant",
+              "color": "rgba(0, 0, 0, 0.45)"
+            },
+            "background": {
+              "type": "color",
+              "color": "#ffffff",
+              "overlay": {
+                "enabled": false,
+                "color": "rgba(255,255,255,0.72)",
+                "blur": 3
+              }
+            }
           }
         }
       },
       "w_lux_card": {
         "id": "w_lux_card",
-        "typeFullFqn": "system.cards.simple_card",
+        "typeFullFqn": "system.cards.value_card",
         "type": "latest",
         "sizeX": 4,
         "sizeY": 3,
@@ -146,7 +262,8 @@
         "col": 0,
         "config": {
           "title": "Ánh sáng",
-          "showTitle": true,
+          "showTitle": false,
+          "useDashboardTimewindow": true,
           "units": "lx",
           "decimals": 2,
           "datasources": [
@@ -167,8 +284,61 @@
             }
           ],
           "settings": {
+            "layout": "square",
+            "showLabel": true,
             "labelPosition": "top",
-            "layout": "left"
+            "labelFont": {
+              "family": "Roboto",
+              "size": 15,
+              "sizeUnit": "px",
+              "weight": "500"
+            },
+            "labelColor": {
+              "type": "constant",
+              "color": "rgba(0, 0, 0, 0.75)"
+            },
+            "showIcon": true,
+            "icon": "light_mode",
+            "iconSize": 34,
+            "iconSizeUnit": "px",
+            "iconColor": {
+              "type": "constant",
+              "color": "#f59e0b"
+            },
+            "valueFont": {
+              "family": "Roboto",
+              "size": 36,
+              "sizeUnit": "px",
+              "weight": "600"
+            },
+            "valueColor": {
+              "type": "constant",
+              "color": "#111827"
+            },
+            "showDate": true,
+            "dateFormat": {
+              "lastUpdateAgo": true,
+              "custom": false
+            },
+            "dateFont": {
+              "family": "Roboto",
+              "size": 12,
+              "sizeUnit": "px",
+              "weight": "400"
+            },
+            "dateColor": {
+              "type": "constant",
+              "color": "rgba(0, 0, 0, 0.45)"
+            },
+            "background": {
+              "type": "color",
+              "color": "#ffffff",
+              "overlay": {
+                "enabled": false,
+                "color": "rgba(255,255,255,0.72)",
+                "blur": 3
+              }
+            }
           }
         }
       },
@@ -176,7 +346,7 @@
         "id": "w_led1_rpc",
         "typeFullFqn": "system.control_widgets.switch_control",
         "type": "rpc",
-        "sizeX": 4,
+        "sizeX": 6,
         "sizeY": 3,
         "row": 0,
         "col": 0,
@@ -186,8 +356,10 @@
           "targetDeviceAliasIds": [
             "alias_node1"
           ],
+          "targetDeviceAliases": [],
           "datasources": [],
           "settings": {
+            "title": "Điều khiển LED 1 (GPIO 18)",
             "initialValue": false,
             "retrieveValueMethod": "rpc",
             "getValueMethod": "getLed1",
@@ -201,7 +373,7 @@
         "id": "w_led2_rpc",
         "typeFullFqn": "system.control_widgets.switch_control",
         "type": "rpc",
-        "sizeX": 4,
+        "sizeX": 6,
         "sizeY": 3,
         "row": 0,
         "col": 0,
@@ -211,8 +383,10 @@
           "targetDeviceAliasIds": [
             "alias_node1"
           ],
+          "targetDeviceAliases": [],
           "datasources": [],
           "settings": {
+            "title": "Điều khiển LED 2 (GPIO 19)",
             "initialValue": false,
             "retrieveValueMethod": "rpc",
             "getValueMethod": "getLed2",
@@ -248,7 +422,11 @@
                   "color": "#ef4444",
                   "units": "°C",
                   "decimals": 2,
-                  "settings": {}
+                  "settings": {
+                    "showLines": true,
+                    "fillLines": true,
+                    "showPoints": true
+                  }
                 }
               ]
             }
@@ -285,7 +463,11 @@
                   "color": "#3b82f6",
                   "units": "%",
                   "decimals": 2,
-                  "settings": {}
+                  "settings": {
+                    "showLines": true,
+                    "fillLines": true,
+                    "showPoints": true
+                  }
                 }
               ]
             }
@@ -322,7 +504,11 @@
                   "color": "#f59e0b",
                   "units": "lx",
                   "decimals": 2,
-                  "settings": {}
+                  "settings": {
+                    "showLines": true,
+                    "fillLines": true,
+                    "showPoints": true
+                  }
                 }
               ]
             }
@@ -335,7 +521,7 @@
       },
       "w_logs_table": {
         "id": "w_logs_table",
-        "typeFullFqn": "uit_lab04.uit_lab04_system_logs_export",
+        "typeFullFqn": "tenant.uit_lab04_system_logs_export",
         "type": "timeseries",
         "sizeX": 24,
         "sizeY": 7,
@@ -416,8 +602,8 @@
           "type": "entityList",
           "entityType": "DEVICE",
           "entityList": [
-            "11111111-1111-1111-1111-111111111111",
-            "22222222-2222-2222-2222-222222222222"
+            "13590d50-e9bd-11f1-96ae-0f50a75f5f03",
+            "13abe840-e9bd-11f1-96ae-0f50a75f5f03"
           ],
           "resolveMultiple": true
         }
@@ -429,7 +615,7 @@
           "type": "singleEntity",
           "singleEntity": {
             "entityType": "DEVICE",
-            "id": "11111111-1111-1111-1111-111111111111"
+            "id": "13590d50-e9bd-11f1-96ae-0f50a75f5f03"
           }
         }
       },
@@ -440,18 +626,36 @@
           "type": "singleEntity",
           "singleEntity": {
             "entityType": "DEVICE",
-            "id": "22222222-2222-2222-2222-222222222222"
+            "id": "13abe840-e9bd-11f1-96ae-0f50a75f5f03"
           }
         }
       }
     },
     "timewindow": {
       "displayValue": "",
+      "hideInterval": false,
+      "hideAggregation": false,
+      "hideAggInterval": false,
+      "hideTimezone": false,
       "selectedTab": 0,
       "realtime": {
         "realtimeType": 0,
         "interval": 1000,
-        "timewindowMs": 900000
+        "timewindowMs": 900000,
+        "quickInterval": "CURRENT_DAY"
+      },
+      "history": {
+        "historyType": 0,
+        "interval": 1000,
+        "timewindowMs": 60000,
+        "fixedTimewindow": {
+          "startTimeMs": 1700000000000,
+          "endTimeMs": 1700003600000
+        }
+      },
+      "aggregation": {
+        "type": "NONE",
+        "limit": 500
       }
     },
     "states": {
@@ -465,59 +669,59 @@
                 "col": 0,
                 "row": 0,
                 "sizeX": 24,
-                "sizeY": 4
+                "sizeY": 5
               },
               "w_temp_card": {
                 "col": 0,
-                "row": 4,
+                "row": 5,
                 "sizeX": 4,
                 "sizeY": 3
               },
               "w_humid_card": {
                 "col": 4,
-                "row": 4,
+                "row": 5,
                 "sizeX": 4,
                 "sizeY": 3
               },
               "w_lux_card": {
                 "col": 8,
-                "row": 4,
+                "row": 5,
                 "sizeX": 4,
                 "sizeY": 3
               },
               "w_led1_rpc": {
                 "col": 12,
-                "row": 4,
+                "row": 5,
                 "sizeX": 6,
                 "sizeY": 3
               },
               "w_led2_rpc": {
                 "col": 18,
-                "row": 4,
+                "row": 5,
                 "sizeX": 6,
                 "sizeY": 3
               },
               "w_chart_temp": {
                 "col": 0,
-                "row": 7,
+                "row": 8,
                 "sizeX": 8,
                 "sizeY": 5
               },
               "w_chart_humid": {
                 "col": 8,
-                "row": 7,
+                "row": 8,
                 "sizeX": 8,
                 "sizeY": 5
               },
               "w_chart_lux": {
                 "col": 16,
-                "row": 7,
+                "row": 8,
                 "sizeX": 8,
                 "sizeY": 5
               },
               "w_logs_table": {
                 "col": 0,
-                "row": 12,
+                "row": 13,
                 "sizeX": 24,
                 "sizeY": 7
               }

@@ -88,8 +88,8 @@ class ThingsBoardClient:
         return device
 
     def list_widget_types(self) -> list[dict[str, Any]]:
-        """Lấy danh sách widgetTypesInfos để đối chiếu đúng tên FQN."""
-        data = self._request("GET", "/api/widgetTypesInfos?pageSize=200&page=0")
+        """Lấy danh sách widgetTypes để đối chiếu đúng tên FQN."""
+        data = self._request("GET", "/api/widgetTypes?pageSize=1000&page=0")
         return list(data.get("data", [])) if isinstance(data, dict) else []
 
     def ensure_widgets_bundle(self, bundle_payload: dict[str, Any]) -> dict[str, Any]:
@@ -104,18 +104,25 @@ class ThingsBoardClient:
     def ensure_widget_type(self, widget_payload: dict[str, Any]) -> dict[str, Any]:
         """Đăng ký mới hoặc cập nhật Custom Widget Type qua FQN."""
         fqn = widget_payload["fqn"]
-        url = f"{self.base_url}/api/widgetType"
-        resp = self.session.get(
-            url,
-            headers=self._headers(),
-            params={"fqn": fqn},
-            timeout=self.timeout,
-        )
+        page = self._request("GET", "/api/widgetTypes?pageSize=100&page=0&tenantOnly=true")
         payload = dict(widget_payload)
-        if resp.status_code == 200 and resp.content:
-            existing = resp.json()
-            payload["id"] = existing["id"]
+        for item in (page or {}).get("data", []):
+            if item.get("fqn") == fqn:
+                payload["id"] = item["id"]
+                break
         return self._request("POST", "/api/widgetType", json=payload)
+
+    def link_widget_types_to_bundle(
+        self,
+        bundle_id: str,
+        widget_type_ids: list[str],
+    ) -> None:
+        """Gắn danh sách Widget Type vào Widgets Bundle trên ThingsBoard."""
+        self._request(
+            "POST",
+            f"/api/widgetsBundle/{bundle_id}/widgetTypes",
+            json=widget_type_ids,
+        )
 
     def ensure_dashboard(self, dashboard_payload: dict[str, Any]) -> dict[str, Any]:
         """Tạo mới hoặc ghi đè Dashboard ThingsBoard theo tiêu đề."""
