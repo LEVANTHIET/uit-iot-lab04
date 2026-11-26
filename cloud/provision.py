@@ -17,16 +17,17 @@ from dashboard.builder import (
 )
 
 
-def wait_for_thingsboard(base_url: str, timeout_sec: int = 120) -> None:
-    """Chờ máy chủ ThingsBoard phản hồi trang đăng nhập trước khi nạp cấu hình."""
+def wait_for_thingsboard(base_url: str, timeout_sec: int = 300) -> None:
+    """Chờ API ThingsBoard phản hồi JSON hợp lệ trước khi nạp cấu hình."""
     deadline = time.monotonic() + timeout_sec
-    url = f"{base_url.rstrip('/')}/login"
+    url = f"{base_url.rstrip('/')}/api/noauth/userPasswordPolicy"
     while time.monotonic() < deadline:
         try:
             resp = requests.get(url, timeout=5)
-            if resp.status_code < 500:
+            if resp.status_code == 200:
+                resp.json()
                 return
-        except requests.RequestException:
+        except (requests.RequestException, ValueError):
             pass
         time.sleep(3)
     raise TimeoutError(f"ThingsBoard không sẵn sàng sau {timeout_sec} giây tại {base_url}")
@@ -48,10 +49,12 @@ def provision_all(
     bundle_payload = build_widget_bundle_payload()
     widget_payload = build_custom_widget_payload()
     client.ensure_widgets_bundle(bundle_payload)
-    client.ensure_widget_type(widget_payload)
+    saved_widget = client.ensure_widget_type(widget_payload)
 
     widget_infos = client.list_widget_types()
     fqns = resolve_widget_fqns(widget_infos)
+    if saved_widget and saved_widget.get("fqn"):
+        fqns["logs_custom"] = str(saved_widget["fqn"])
     dash_payload = build_dashboard_payload(node1_id, node2_id, widget_fqns=fqns)
     saved_dash = client.ensure_dashboard(dash_payload)
 
@@ -67,10 +70,10 @@ def provision_all(
 def main() -> None:
     """Điểm vào dòng lệnh tự động cấu hình ThingsBoard cho Lab 04."""
     parser = argparse.ArgumentParser(description="Khởi tạo tự động ThingsBoard Lab 04")
-    parser.add_argument("--url", default="http://localhost:8080")
+    parser.add_argument("--url", default="http://localhost:9090")
     parser.add_argument("--user", default="tenant@thingsboard.org")
     parser.add_argument("--password", default="tenant")
-    parser.add_argument("--wait", type=int, default=120)
+    parser.add_argument("--wait", type=int, default=300)
     args = parser.parse_args()
 
     wait_for_thingsboard(args.url, timeout_sec=args.wait)

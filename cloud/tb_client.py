@@ -10,7 +10,7 @@ class ThingsBoardClient:
 
     def __init__(
         self,
-        base_url: str = "http://localhost:8080",
+        base_url: str = "http://localhost:9090",
         session: requests.Session | None = None,
         timeout: int = 15,
     ) -> None:

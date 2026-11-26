@@ -4,7 +4,7 @@ services:
     container_name: uit-lab04-thingsboard
     restart: unless-stopped
     ports:
-      - "8080:9090"
+      - "9090:9090"
       - "1883:1883"
     environment:
       TB_QUEUE_TYPE: in-memory

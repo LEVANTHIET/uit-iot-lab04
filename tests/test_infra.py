@@ -11,12 +11,12 @@ class TestInfraSetup(unittest.TestCase):
     """Kiểm tra cấu hình Docker ThingsBoard và tài liệu đấu nối."""
 
     def test_docker_compose_contains_required_ports_and_image(self) -> None:
-        """Xác nhận docker-compose dùng tb-postgres và mở cổng 8080, 1883."""
+        """Xác nhận docker-compose dùng tb-postgres và mở cổng 9090, 1883."""
         compose_path = ROOT_DIR / "docker" / "docker-compose.yml"
         self.assertTrue(compose_path.is_file())
         content = compose_path.read_text(encoding="utf-8")
         self.assertIn("thingsboard/tb-postgres", content)
-        self.assertIn("8080:9090", content)
+        self.assertIn("9090:9090", content)
         self.assertIn("1883:1883", content)
 
     def test_docs_and_feature_map_exist(self) -> None:

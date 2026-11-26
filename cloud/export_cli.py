@@ -55,7 +55,7 @@ def export_logs_to_file(
 def main() -> None:
     """Điểm vào dòng lệnh xuất nhật ký IoT ra tệp CSV hoặc Excel."""
     parser = argparse.ArgumentParser(description="Xuất nhật ký telemetry từ ThingsBoard")
-    parser.add_argument("--url", default="http://localhost:8080")
+    parser.add_argument("--url", default="http://localhost:9090")
     parser.add_argument("--user", default="tenant@thingsboard.org")
     parser.add_argument("--password", default="tenant")
     parser.add_argument("--format", choices=["csv", "xlsx"], default="csv")

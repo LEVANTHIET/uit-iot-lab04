@@ -4,7 +4,7 @@ Dự án thực hành môn **Công nghệ Internet of Things Hiện đại (UIT 
 
 ## Kiến trúc hệ thống
 
-- **IoT Platform (Local Docker):** `thingsboard/tb-postgres:3.8.1` tích hợp sẵn Web Dashboard + REST API (`8080`), MQTT Broker (`1883`) và PostgreSQL.
+- **IoT Platform (Local Docker):** `thingsboard/tb-postgres:3.8.1` tích hợp sẵn Web Dashboard + REST API (`9090`), MQTT Broker (`1883`) và PostgreSQL.
 - **ESP32 #1 (`ESP32-Node1-Light-LED`):** Đọc cảm biến ánh sáng `BH1750` (`illuminance`) và điều khiển **2 đèn LED** (`GPIO 18`, `GPIO 19`) qua MQTT Server-side RPC (`setLed1`, `setLed2`).
 - **ESP32 #2 (`ESP32-Node2-Temp-Humid`):** Đọc cảm biến `DHT22/DHT11` gửi nhiệt độ (`temperature`) và độ ẩm (`humidity`).
 - **Dashboard & Logs Nâng cao:** Đóng gói thuần bên trong ThingsBoard CE, gồm 4 khu vực: Trạng thái thiết bị, Giá trị tức thời + 2 công tắc LED, 3 Biểu đồ thời gian thực, và Custom Widget Logs 5 cột kèm bộ lọc + xuất `CSV`/`Excel`.
@@ -32,7 +32,7 @@ Dự án thực hành môn **Công nghệ Internet of Things Hiện đại (UIT 
    ```
 3. **Nạp tự động 2 thiết bị, Custom Widget và Dashboard:**
    ```powershell
-   python -m cloud.provision --url http://localhost:8080
+   python -m cloud.provision --url http://localhost:9090
    ```
 4. **Chạy trình giả lập 2 mạch ESP32 (hoặc nạp code trong `edge/firmware/` lên mạch thật):**
    ```powershell

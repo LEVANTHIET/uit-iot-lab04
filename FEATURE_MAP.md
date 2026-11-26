@@ -12,7 +12,7 @@
 ## 2. Luồng Nghiệp Vụ Sống Còn (Critical User / System Flows)
 | Mã luồng | Tên luồng tính năng | Điểm vào (Entry Point) | Kết quả kỳ vọng & Tiêu chí Runtime Verification |
 | :--- | :--- | :--- | :--- |
-| `FLOW-01` | Triển khai ThingsBoard CE nội bộ qua Docker | `docker/docker-compose.yml` | Khởi chạy `thingsboard/tb-postgres` cổng Web `8080` và MQTT `1883`, truy cập `http://localhost:8080` không lỗi. |
+| `FLOW-01` | Triển khai ThingsBoard CE nội bộ qua Docker | `docker/docker-compose.yml` | Khởi chạy `thingsboard/tb-postgres` cổng Web `9090` và MQTT `1883`, truy cập `http://localhost:9090` không lỗi. |
 | `FLOW-02` | Thu thập & hiển thị trạng thái kết nối 2 thiết bị ESP32 | `cloud/provision.py`, `edge/simulator/esp32_sim.py` | Bảng thiết bị trên Dashboard ThingsBoard hiển thị đủ `ESP32-Node1-Light-LED` và `ESP32-Node2-Temp-Humid` kèm trạng thái hoạt động. |
 | `FLOW-03` | Màn hình chính & điều khiển 2 đèn LED thời gian thực | `edge/simulator/rpc_handler.py`, ThingsBoard Switch RPC | Hiển thị giá trị tức thời của 3 cảm biến; bật/tắt 2 công tắc LED gửi RPC `setLed1`/`setLed2` và phản hồi trạng thái tức thì. |
 | `FLOW-04` | Biểu đồ thời gian thực 3 thông số cảm biến | `dashboard/builder.py` | 3 biểu đồ đường thời gian thực cập nhật liên tục cho `temperature`, `humidity`, `illuminance`. |

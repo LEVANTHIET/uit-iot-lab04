@@ -99,7 +99,7 @@ class TestCloudProvisionAndExport(unittest.TestCase):
             _FakeResponse(200, {"illuminance": [{"ts": 1700000000000, "value": "250"}]}),
             _FakeResponse(200, {"temperature": [{"ts": 1700000001000, "value": "27.5"}]}),
         ]
-        client = ThingsBoardClient(base_url="http://localhost:8080", session=session)
+        client = ThingsBoardClient(base_url="http://localhost:9090", session=session)
         with tempfile.TemporaryDirectory() as tmp:
             tmp_dir = Path(tmp)
             n1, n2, dash_id = provision_all(client, "tenant@thingsboard.org", "tenant", save_dir=tmp_dir)
